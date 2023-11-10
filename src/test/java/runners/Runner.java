@@ -10,7 +10,7 @@ import io.cucumber.junit.CucumberOptions;
 		
 		features= {"classpath:features"},
 		glue = "steps",
-		tags="@LoginFeature",
+		tags="@Scenario1",
 		dryRun= false,
 		monochrome= true,
 		plugin= {
