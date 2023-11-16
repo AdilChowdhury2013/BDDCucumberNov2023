@@ -1,60 +1,154 @@
 package steps;
 
 import org.junit.Assert;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.support.PageFactory;
 
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.junit.Cucumber;
+import pages.BankCashPage;
+import pages.DatabasePage;
 import pages.LoginPage;
 import pages.TestBase;
 
+@RunWith(Cucumber.class)
 public class LoginStepDefinition extends TestBase {
 
 	LoginPage loginPage;
+	BankCashPage bankcashPage;
+	DatabasePage databasePage;
 
 	@Before
 	public void beforeRun() {
 		innitDriver();
 		loginPage = PageFactory.initElements(driver, LoginPage.class);
+		bankcashPage = PageFactory.initElements(driver, BankCashPage.class);
+		// databasePage = new DatabasePage();
+		
 	}
 
-	@Given("User is on Techfios login page")
+	@Given("User is on the techfios login page")
 	public void user_is_on_Techfios_login_page() {
-		driver.get("https://www.techfios.com/billing/?ng=login/");
-
+		driver.get("https://techfios.com/billing/?ng=admin/");
+		// driver.get("https://qa.codefios.com/");
 	}
 
-	@When("User enters the username as {string}")
-	public void user_enters_the_username_as(String username) {
+	@When("User enters the {string} in the {string} field")
+	public void user_enters_the_LoginData(String LoginData, String field) {
 
-		loginPage.enterUserName(username);
+		switch (field) {
 
+		case "username":
+			loginPage.enterUserName(LoginData);
+			break;
+
+		case "password":
+			loginPage.enterPassword(LoginData);
+
+		}
 	}
 
-	@When("User enters the password as {string}")
-	public void user_enters_the_password_as(String password) {
-		loginPage.enterUserName(password);
+	@And("User clicks on {string}")
+	public void user_clicks_on_button(String click) {
 
+		switch (click) {
+
+		case "login":
+			loginPage.clickSignInButton();
+			System.out.println("clicking login button");
+			break;
+
+		case "bankCash":
+			bankcashPage.clickOnBankCashButton();
+			System.out.println("clicking Bank & Cash Button");
+			break;
+
+		case "newAccount":
+			bankcashPage.clickOnNewAccountButton();
+			System.out.println("clicking New Account Button");
+			break;
+
+		case "submit":
+			bankcashPage.clickSubmitButton();
+			break;
+
+		}
 	}
 
-	@When("User clicks on the signin button")
-	public void user_clicks_on_the_signin_button() {
-		loginPage.clickSignInButton();
-	}
+	@And("User should land on Dashboard page")
+	public void user_should_land_on_Dashboard_page() {
 
-	@Then("User should land on dashboard page")
-	public void user_should_land_on_dashboard_page() {
-		String expectedTitle = "Dashboard -iBilling";
+		System.out.println("User is on Dashboard Page");
+		String expectedTitle = "Dashboard- iBilling";
 		String actualTitle = loginPage.getPageTitle();
-		Assert.assertEquals(actualTitle, expectedTitle, "page not found!");
+		Assert.assertEquals(actualTitle, expectedTitle);
+		takeScreenshot(driver);
+
+	}
+
+	@And("User enters {string} in the {string} field in accounts page")
+	public void user_enters_in_the_field_in_accounts_page(String inputValue, String field) {
+
+		switch (field) {
+
+		case "accountTitle":
+			bankcashPage.addAccountTitle(inputValue);
+			System.out.println("Adding Title");
+
+			break;
+
+		case "description":
+			bankcashPage.addDescription(inputValue);
+			System.out.println("Adding Description");
+			break;
+
+		case "initialBalance":
+			bankcashPage.addBalance(inputValue);
+			System.out.println("Adding Initial Balance");
+			break;
+
+		case "accountNumber":
+			bankcashPage.addAccount(inputValue);
+			System.out.println("Adding Account Number");
+			break;
+
+		case "contactPerson":
+			bankcashPage.addContactPerson(inputValue);
+			System.out.println("Adding Contact Person");
+			break;
+
+		case "Phone":
+			bankcashPage.addPhoneNumber(inputValue);
+			System.out.println("Adding Phone Number");
+			break;
+
+		case "internetBankingURL":
+			bankcashPage.addBankURL(inputValue);
+			System.out.println("Adding Inernet Banking URL");
+			break;
+
+		}
+	}
+
+	@Then("User should be able to validate account created successfully")
+	public void accountCreatedValidation() {
+		System.out.println("User is on Accounts Page after adding details");
+		String expectedTitle = "Accounts- iBilling";
+		String actualTitle = loginPage.getPageTitle();
+		Assert.assertEquals(actualTitle, expectedTitle);
+		ExtentReportGenerator();
+		reporterClose();
 	}
 
 	@After
-	public void tearDown() {
+	public void ReportAndtearDown() {
 		driver.close();
 		driver.quit();
 	}
+
 }

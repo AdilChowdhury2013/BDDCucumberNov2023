@@ -1,7 +1,6 @@
 package runners;
 
 import org.junit.runner.RunWith;
-
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 
@@ -10,7 +9,7 @@ import io.cucumber.junit.CucumberOptions;
 		
 		features= {"classpath:features"},
 		glue = "steps",
-		tags="@Scenario1",
+		tags= "@DbloginFeature", //"@CheckOtherFeature"
 		dryRun= false,
 		monochrome= true,
 		plugin= {
